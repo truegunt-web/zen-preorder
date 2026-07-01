@@ -14,16 +14,282 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      order_items: {
+        Row: {
+          comment: string | null
+          created_at: string
+          id: string
+          order_id: string
+          price: number
+          product_id: string | null
+          product_name: string
+          quantity: number
+          unit: Database["public"]["Enums"]["unit_of_measure"]
+        }
+        Insert: {
+          comment?: string | null
+          created_at?: string
+          id?: string
+          order_id: string
+          price: number
+          product_id?: string | null
+          product_name: string
+          quantity: number
+          unit: Database["public"]["Enums"]["unit_of_measure"]
+        }
+        Update: {
+          comment?: string | null
+          created_at?: string
+          id?: string
+          order_id?: string
+          price?: number
+          product_id?: string | null
+          product_name?: string
+          quantity?: number
+          unit?: Database["public"]["Enums"]["unit_of_measure"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_items_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_items_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      orders: {
+        Row: {
+          address: string
+          comment: string | null
+          created_at: string
+          customer_email: string | null
+          customer_name: string
+          customer_phone: string
+          delivery_day: Database["public"]["Enums"]["delivery_day"]
+          id: string
+          order_number: number
+          status: Database["public"]["Enums"]["order_status"]
+          total: number
+          updated_at: string
+          user_id: string | null
+          window_id: string | null
+        }
+        Insert: {
+          address: string
+          comment?: string | null
+          created_at?: string
+          customer_email?: string | null
+          customer_name: string
+          customer_phone: string
+          delivery_day: Database["public"]["Enums"]["delivery_day"]
+          id?: string
+          order_number?: number
+          status?: Database["public"]["Enums"]["order_status"]
+          total?: number
+          updated_at?: string
+          user_id?: string | null
+          window_id?: string | null
+        }
+        Update: {
+          address?: string
+          comment?: string | null
+          created_at?: string
+          customer_email?: string | null
+          customer_name?: string
+          customer_phone?: string
+          delivery_day?: Database["public"]["Enums"]["delivery_day"]
+          id?: string
+          order_number?: number
+          status?: Database["public"]["Enums"]["order_status"]
+          total?: number
+          updated_at?: string
+          user_id?: string | null
+          window_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "orders_window_id_fkey"
+            columns: ["window_id"]
+            isOneToOne: false
+            referencedRelation: "preorder_windows"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      preorder_windows: {
+        Row: {
+          closes_at: string
+          created_at: string
+          delivery_days: Database["public"]["Enums"]["delivery_day"][]
+          delivery_week_start: string | null
+          description: string | null
+          id: string
+          is_active: boolean
+          opens_at: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          closes_at: string
+          created_at?: string
+          delivery_days?: Database["public"]["Enums"]["delivery_day"][]
+          delivery_week_start?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          opens_at: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          closes_at?: string
+          created_at?: string
+          delivery_days?: Database["public"]["Enums"]["delivery_day"][]
+          delivery_week_start?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          opens_at?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      products: {
+        Row: {
+          category: Database["public"]["Enums"]["product_category"]
+          created_at: string
+          description: string | null
+          id: string
+          image_url: string | null
+          is_active: boolean
+          min_order: number
+          name: string
+          price: number
+          sort_order: number
+          step: number
+          unit: Database["public"]["Enums"]["unit_of_measure"]
+          updated_at: string
+        }
+        Insert: {
+          category?: Database["public"]["Enums"]["product_category"]
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          min_order?: number
+          name: string
+          price: number
+          sort_order?: number
+          step?: number
+          unit?: Database["public"]["Enums"]["unit_of_measure"]
+          updated_at?: string
+        }
+        Update: {
+          category?: Database["public"]["Enums"]["product_category"]
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          min_order?: number
+          name?: string
+          price?: number
+          sort_order?: number
+          step?: number
+          unit?: Database["public"]["Enums"]["unit_of_measure"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          address: string | null
+          created_at: string
+          full_name: string | null
+          id: string
+          notify_on_new_window: boolean
+          phone: string | null
+          updated_at: string
+        }
+        Insert: {
+          address?: string | null
+          created_at?: string
+          full_name?: string | null
+          id: string
+          notify_on_new_window?: boolean
+          phone?: string | null
+          updated_at?: string
+        }
+        Update: {
+          address?: string | null
+          created_at?: string
+          full_name?: string | null
+          id?: string
+          notify_on_new_window?: boolean
+          phone?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
+      is_staff: { Args: { _user_id: string }; Returns: boolean }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "editor" | "user"
+      delivery_day: "thursday" | "friday" | "saturday"
+      order_status: "new" | "confirmed" | "modified" | "completed" | "cancelled"
+      product_category:
+        | "fish"
+        | "seafood"
+        | "semifinished_turkey"
+        | "semifinished_fish"
+        | "semifinished_squid"
+        | "semifinished_cottage"
+        | "semifinished_apple"
+        | "other"
+      unit_of_measure: "kg" | "g" | "pcs" | "pack"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +416,21 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "editor", "user"],
+      delivery_day: ["thursday", "friday", "saturday"],
+      order_status: ["new", "confirmed", "modified", "completed", "cancelled"],
+      product_category: [
+        "fish",
+        "seafood",
+        "semifinished_turkey",
+        "semifinished_fish",
+        "semifinished_squid",
+        "semifinished_cottage",
+        "semifinished_apple",
+        "other",
+      ],
+      unit_of_measure: ["kg", "g", "pcs", "pack"],
+    },
   },
 } as const
