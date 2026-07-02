@@ -289,6 +289,13 @@ export type Database = {
         | "semifinished_cottage"
         | "semifinished_apple"
         | "other"
+        | "fish_chilled"
+        | "fish_salted"
+        | "fish_smoked"
+        | "caviar"
+        | "marinades"
+        | "semifinished"
+        | "canned"
       unit_of_measure: "kg" | "g" | "pcs" | "pack"
     }
     CompositeTypes: {
@@ -429,6 +436,13 @@ export const Constants = {
         "semifinished_cottage",
         "semifinished_apple",
         "other",
+        "fish_chilled",
+        "fish_salted",
+        "fish_smoked",
+        "caviar",
+        "marinades",
+        "semifinished",
+        "canned",
       ],
       unit_of_measure: ["kg", "g", "pcs", "pack"],
     },
