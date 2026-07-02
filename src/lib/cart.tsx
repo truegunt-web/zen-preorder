@@ -96,8 +96,16 @@ export const UNIT_LABEL: Record<string, string> = {
 };
 
 export const CATEGORY_LABEL: Record<string, string> = {
-  fish: "Рыба",
+  fish_chilled: "Рыба охлаждённая",
+  fish_salted: "Слабосолёная",
+  fish_smoked: "Копчёная",
+  caviar: "Икра",
   seafood: "Морепродукты",
+  marinades: "Маринады",
+  semifinished: "Полуфабрикаты",
+  canned: "Консервы",
+  // legacy
+  fish: "Рыба",
   semifinished_fish: "П/ф рыбные",
   semifinished_turkey: "П/ф из индейки",
   semifinished_squid: "П/ф из кальмара",
@@ -105,6 +113,7 @@ export const CATEGORY_LABEL: Record<string, string> = {
   semifinished_apple: "П/ф яблочные",
   other: "Прочее",
 };
+
 
 export const DELIVERY_DAY_LABEL: Record<string, string> = {
   thursday: "Четверг",
