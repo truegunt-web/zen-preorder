@@ -336,7 +336,7 @@ function ProductEditor({
           </div>
           <div className="space-y-2">
             <Label>Ед. измерения</Label>
-            <Select value={form.unit ?? "pcs"} onValueChange={(v) => setField("unit", v)}>
+            <Select value={form.unit ?? "pcs"} onValueChange={(v) => setField("unit", v as ProductUnit)}>
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
