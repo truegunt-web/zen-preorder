@@ -320,7 +320,7 @@ function ProductEditor({
             <Label>Категория</Label>
             <Select
               value={form.category ?? "fish_chilled"}
-              onValueChange={(v) => setField("category", v)}
+              onValueChange={(v) => setField("category", v as ProductCategory)}
             >
               <SelectTrigger>
                 <SelectValue />
