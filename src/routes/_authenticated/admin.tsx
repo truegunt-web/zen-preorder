@@ -21,7 +21,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 import type { Database } from "@/integrations/supabase/types";
+
+type ProductCategory = Database["public"]["Enums"]["product_category"];
+type ProductUnit = Database["public"]["Enums"]["unit_type"];
 import { Pencil, Plus, Trash2, LogOut, ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
 import { CATEGORY_LABEL, UNIT_LABEL, formatPrice } from "@/lib/cart";
