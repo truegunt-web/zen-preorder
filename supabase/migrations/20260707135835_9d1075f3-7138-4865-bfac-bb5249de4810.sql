@@ -1,0 +1,2 @@
+
+REVOKE EXECUTE ON FUNCTION public.grant_first_user_admin() FROM PUBLIC, anon, authenticated;
