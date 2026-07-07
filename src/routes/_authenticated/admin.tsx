@@ -37,10 +37,10 @@ export const Route = createFileRoute("/_authenticated/admin")({
 type Product = {
   id: string;
   name: string;
-  category: string;
+  category: ProductCategory;
   description: string | null;
   price: number;
-  unit: string;
+  unit: ProductUnit;
   min_order: number;
   step: number;
   image_url: string | null;
