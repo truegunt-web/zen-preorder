@@ -25,7 +25,6 @@ import { Switch } from "@/components/ui/switch";
 import type { Database } from "@/integrations/supabase/types";
 
 type ProductCategory = Database["public"]["Enums"]["product_category"];
-type ProductCategory = Database["public"]["Enums"]["product_category"];
 type ProductUnit = Database["public"]["Enums"]["unit_of_measure"];
 import { Pencil, Plus, Trash2, LogOut, ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
