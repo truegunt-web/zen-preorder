@@ -1,8 +1,21 @@
 import { Link } from "@tanstack/react-router";
-import { Fish } from "lucide-react";
+import { Fish, Settings } from "lucide-react";
+import { useEffect, useState } from "react";
 import { CartSheet } from "./CartSheet";
+import { supabase } from "@/integrations/supabase/client";
+import { Button } from "@/components/ui/button";
 
 export function SiteHeader() {
+  const [signedIn, setSignedIn] = useState(false);
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => setSignedIn(!!data.user));
+    const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => {
+      setSignedIn(!!s?.user);
+    });
+    return () => sub.subscription.unsubscribe();
+  }, []);
+
   return (
     <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur-lg">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
@@ -16,6 +29,18 @@ export function SiteHeader() {
           </div>
         </Link>
         <div className="flex items-center gap-2">
+          {signedIn ? (
+            <Button asChild variant="ghost" size="sm">
+              <Link to="/admin">
+                <Settings className="h-4 w-4 sm:mr-1" />
+                <span className="hidden sm:inline">Админка</span>
+              </Link>
+            </Button>
+          ) : (
+            <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex">
+              <Link to="/auth">Войти</Link>
+            </Button>
+          )}
           <CartSheet />
         </div>
       </div>
