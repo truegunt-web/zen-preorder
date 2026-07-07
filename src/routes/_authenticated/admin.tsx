@@ -263,19 +263,20 @@ function ProductEditor({
   const save = async () => {
     setSaving(true);
     try {
+      const name = form.name?.trim();
+      if (!name) throw new Error("Введите название");
       const payload = {
-        name: form.name?.trim(),
-        category: form.category,
+        name,
+        category: (form.category ?? "fish_chilled") as Product["category"],
         description: form.description ?? null,
         price: Number(form.price),
-        unit: form.unit,
+        unit: (form.unit ?? "pcs") as Product["unit"],
         min_order: Number(form.min_order),
         step: Number(form.step),
         image_url: form.image_url?.trim() || null,
         is_active: form.is_active ?? true,
         sort_order: Number(form.sort_order ?? 100),
       };
-      if (!payload.name) throw new Error("Введите название");
       if (product?.id) {
         const { error } = await supabase
           .from("products")
