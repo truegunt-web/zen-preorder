@@ -75,19 +75,23 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Свежий улов — предзаказ рыбы и морепродуктов" },
+      { title: "Рыбман — Доставка рыбы и морепродуктов Истра" },
       {
         name: "description",
         content:
-          "Предзаказ свежей рыбы, морепродуктов и полуфабрикатов с доставкой в четверг, пятницу и субботу. Приём заявок ограничен по времени.",
+          "Заказ свежей рыбы, морепродуктов, деликатесов и полуфабрикатов с доставкой по Истринскому району.",
       },
-      { property: "og:title", content: "Свежий улов — предзаказ рыбы и морепродуктов" },
+      { property: "og:title", content: "Рыбман — Доставка рыбы и морепродуктов Истра" },
       {
         property: "og:description",
-        content: "Соберите заказ по каталогу недели. Доставка чт/пт/сб.",
+        content: "Заказ свежей рыбы, морепродуктов, деликатесов и полуфабрикатов с доставкой по Истринскому району.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Рыбман — Доставка рыбы и морепродуктов Истра" },
+      { name: "twitter:description", content: "Заказ свежей рыбы, морепродуктов, деликатесов и полуфабрикатов с доставкой по Истринскому району." },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/d009d807-5617-4a1a-a513-bc497cb2ce0c" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/d009d807-5617-4a1a-a513-bc497cb2ce0c" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
