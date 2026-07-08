@@ -152,9 +152,35 @@ function CheckoutPage() {
               </Card>
 
               <Card className="p-6">
-                <h2 className="mb-4 text-lg font-semibold">Доставка</h2>
+                <h2 className="mb-4 text-lg font-semibold">Получение</h2>
                 <div className="mb-4">
-                  <Label>День доставки *</Label>
+                  <Label>Способ получения *</Label>
+                  <RadioGroup
+                    value={form.shippingMethod}
+                    onValueChange={(v) => setForm({ ...form, shippingMethod: v })}
+                    className="mt-2 grid grid-cols-2 gap-2"
+                  >
+                    <label
+                      className={`flex cursor-pointer flex-col items-center gap-1 rounded-xl border-2 p-4 transition ${
+                        form.shippingMethod === "delivery" ? "border-accent bg-accent/5" : "border-border hover:border-accent/50"
+                      }`}
+                    >
+                      <RadioGroupItem value="delivery" className="sr-only" />
+                      <span className="text-sm font-semibold">Доставка</span>
+                      <span className="text-[11px] text-muted-foreground">400 ₽ по Истринскому району</span>
+                    </label>
+                    <label
+                      className={`flex cursor-pointer flex-col items-center gap-1 rounded-xl border-2 p-4 transition ${
+                        form.shippingMethod === "pickup" ? "border-accent bg-accent/5" : "border-border hover:border-accent/50"
+                      }`}
+                    >
+                      <RadioGroupItem value="pickup" className="sr-only" />
+                      <span className="text-sm font-semibold">Самовывоз</span>
+                    </label>
+                  </RadioGroup>
+                </div>
+                <div className="mb-4">
+                  <Label>День {form.shippingMethod === "delivery" ? "доставки" : "получения"} *</Label>
                   <RadioGroup
                     value={form.deliveryDay}
                     onValueChange={(v) => setForm({ ...form, deliveryDay: v })}
@@ -174,16 +200,19 @@ function CheckoutPage() {
                   </RadioGroup>
                   {errors.deliveryDay && <p className="mt-1 text-xs text-destructive">{errors.deliveryDay}</p>}
                 </div>
-                <div>
-                  <Label htmlFor="address">Адрес доставки *</Label>
-                  <Textarea id="address" value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} className="mt-1" rows={2} />
-                  {errors.address && <p className="mt-1 text-xs text-destructive">{errors.address}</p>}
-                </div>
+                {form.shippingMethod === "delivery" && (
+                  <div>
+                    <Label htmlFor="address">Адрес доставки *</Label>
+                    <Textarea id="address" value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} className="mt-1" rows={2} />
+                    {errors.address && <p className="mt-1 text-xs text-destructive">{errors.address}</p>}
+                  </div>
+                )}
                 <div className="mt-4">
                   <Label htmlFor="comment">Комментарий к заказу</Label>
                   <Textarea id="comment" value={form.comment} onChange={(e) => setForm({ ...form, comment: e.target.value })} className="mt-1" rows={3} placeholder="Время доставки, пожелания…" />
                 </div>
               </Card>
+
             </div>
 
             <div className="lg:sticky lg:top-24 lg:h-fit">
