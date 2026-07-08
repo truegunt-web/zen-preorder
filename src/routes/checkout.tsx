@@ -84,7 +84,7 @@ function CheckoutPage() {
           customer_name: parsed.data.name,
           customer_phone: parsed.data.phone,
           customer_email: null,
-          address: parsed.data.address,
+          address: parsed.data.shippingMethod === "delivery" ? (parsed.data.address ?? "") : "Самовывоз",
           comment: parsed.data.comment || null,
           total,
         })
