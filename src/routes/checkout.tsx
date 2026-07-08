@@ -83,7 +83,7 @@ function CheckoutPage() {
           delivery_day: parsed.data.deliveryDay,
           customer_name: parsed.data.name,
           customer_phone: parsed.data.phone,
-          customer_email: parsed.data.email || null,
+          customer_email: null,
           address: parsed.data.address,
           comment: parsed.data.comment || null,
           total,
