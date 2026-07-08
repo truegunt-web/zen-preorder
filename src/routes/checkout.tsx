@@ -23,7 +23,7 @@ const DELIVERY_FEE = 400;
 const schema = z.object({
   name: z.string().trim().min(2, "Укажите имя").max(100),
   phone: z.string().trim().min(6, "Укажите телефон").max(30),
-  address: z.string().trim().min(5, "Укажите адрес").max(300),
+  address: z.string().trim().max(300).optional().or(z.literal("")),
   comment: z.string().max(500).optional(),
   deliveryDay: z.enum(["thursday", "friday", "saturday"], { message: "Выберите день доставки" }),
   shippingMethod: z.enum(["delivery", "pickup"], { message: "Выберите способ получения" }),
