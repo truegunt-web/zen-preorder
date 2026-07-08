@@ -57,7 +57,6 @@ function CheckoutPage() {
   const deliveryDays = useMemo(() => (windowQ.data?.delivery_days ?? ["thursday", "friday", "saturday"]) as string[], [
     windowQ.data,
   ]);
-    }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -71,6 +70,7 @@ function CheckoutPage() {
       parsed.error.issues.forEach((i) => (errs[i.path[0] as string] = i.message));
       setErrors(errs);
       return;
+    }
     if (parsed.data.shippingMethod === "delivery" && (!parsed.data.address || parsed.data.address.trim().length < 5)) {
       setErrors({ address: "Укажите адрес доставки" });
       return;
