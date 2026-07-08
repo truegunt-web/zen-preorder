@@ -18,21 +18,25 @@ export const Route = createFileRoute("/checkout")({
   component: CheckoutPage,
 });
 
+const DELIVERY_FEE = 400;
+
 const schema = z.object({
   name: z.string().trim().min(2, "Укажите имя").max(100),
   phone: z.string().trim().min(6, "Укажите телефон").max(30),
-  email: z.string().trim().email("Некорректный email").max(255).optional().or(z.literal("")),
-  address: z.string().trim().min(5, "Укажите адрес доставки").max(300),
+  address: z.string().trim().max(300).optional().or(z.literal("")),
   comment: z.string().max(500).optional(),
   deliveryDay: z.enum(["thursday", "friday", "saturday"], { message: "Выберите день доставки" }),
+  shippingMethod: z.enum(["delivery", "pickup"], { message: "Выберите способ получения" }),
 });
 
 function CheckoutPage() {
-  const { items, total, clear } = useCart();
+  const { items, total: itemsTotal, clear } = useCart();
   const navigate = useNavigate();
   const [submitting, setSubmitting] = useState(false);
-  const [form, setForm] = useState({ name: "", phone: "", email: "", address: "", comment: "", deliveryDay: "" });
+  const [form, setForm] = useState({ name: "", phone: "", address: "", comment: "", deliveryDay: "", shippingMethod: "delivery" });
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const deliveryFee = form.shippingMethod === "delivery" ? DELIVERY_FEE : 0;
+  const total = itemsTotal + deliveryFee;
 
   const windowQ = useQuery({
     queryKey: ["active-window"],
@@ -67,6 +71,10 @@ function CheckoutPage() {
       setErrors(errs);
       return;
     }
+    if (parsed.data.shippingMethod === "delivery" && (!parsed.data.address || parsed.data.address.trim().length < 5)) {
+      setErrors({ address: "Укажите адрес доставки" });
+      return;
+    }
     setErrors({});
     setSubmitting(true);
     try {
@@ -79,8 +87,8 @@ function CheckoutPage() {
           delivery_day: parsed.data.deliveryDay,
           customer_name: parsed.data.name,
           customer_phone: parsed.data.phone,
-          customer_email: parsed.data.email || null,
-          address: parsed.data.address,
+          customer_email: null,
+          address: parsed.data.shippingMethod === "delivery" ? (parsed.data.address ?? "") : "Самовывоз",
           comment: parsed.data.comment || null,
           total,
         })
@@ -144,18 +152,39 @@ function CheckoutPage() {
                     <Input id="phone" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} className="mt-1" placeholder="+7 ..." />
                     {errors.phone && <p className="mt-1 text-xs text-destructive">{errors.phone}</p>}
                   </div>
-                  <div className="sm:col-span-2">
-                    <Label htmlFor="email">Email (для подтверждения)</Label>
-                    <Input id="email" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className="mt-1" />
-                    {errors.email && <p className="mt-1 text-xs text-destructive">{errors.email}</p>}
-                  </div>
                 </div>
               </Card>
 
               <Card className="p-6">
-                <h2 className="mb-4 text-lg font-semibold">Доставка</h2>
+                <h2 className="mb-4 text-lg font-semibold">Получение</h2>
                 <div className="mb-4">
-                  <Label>День доставки *</Label>
+                  <Label>Способ получения *</Label>
+                  <RadioGroup
+                    value={form.shippingMethod}
+                    onValueChange={(v) => setForm({ ...form, shippingMethod: v })}
+                    className="mt-2 grid grid-cols-2 gap-2"
+                  >
+                    <label
+                      className={`flex cursor-pointer flex-col items-center gap-1 rounded-xl border-2 p-4 transition ${
+                        form.shippingMethod === "delivery" ? "border-accent bg-accent/5" : "border-border hover:border-accent/50"
+                      }`}
+                    >
+                      <RadioGroupItem value="delivery" className="sr-only" />
+                      <span className="text-sm font-semibold">Доставка</span>
+                      <span className="text-[11px] text-muted-foreground">400 ₽ по Истринскому району</span>
+                    </label>
+                    <label
+                      className={`flex cursor-pointer flex-col items-center gap-1 rounded-xl border-2 p-4 transition ${
+                        form.shippingMethod === "pickup" ? "border-accent bg-accent/5" : "border-border hover:border-accent/50"
+                      }`}
+                    >
+                      <RadioGroupItem value="pickup" className="sr-only" />
+                      <span className="text-sm font-semibold">Самовывоз</span>
+                    </label>
+                  </RadioGroup>
+                </div>
+                <div className="mb-4">
+                  <Label>День {form.shippingMethod === "delivery" ? "доставки" : "получения"} *</Label>
                   <RadioGroup
                     value={form.deliveryDay}
                     onValueChange={(v) => setForm({ ...form, deliveryDay: v })}
@@ -175,16 +204,19 @@ function CheckoutPage() {
                   </RadioGroup>
                   {errors.deliveryDay && <p className="mt-1 text-xs text-destructive">{errors.deliveryDay}</p>}
                 </div>
-                <div>
-                  <Label htmlFor="address">Адрес доставки *</Label>
-                  <Textarea id="address" value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} className="mt-1" rows={2} />
-                  {errors.address && <p className="mt-1 text-xs text-destructive">{errors.address}</p>}
-                </div>
+                {form.shippingMethod === "delivery" && (
+                  <div>
+                    <Label htmlFor="address">Адрес доставки *</Label>
+                    <Textarea id="address" value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} className="mt-1" rows={2} />
+                    {errors.address && <p className="mt-1 text-xs text-destructive">{errors.address}</p>}
+                  </div>
+                )}
                 <div className="mt-4">
                   <Label htmlFor="comment">Комментарий к заказу</Label>
                   <Textarea id="comment" value={form.comment} onChange={(e) => setForm({ ...form, comment: e.target.value })} className="mt-1" rows={3} placeholder="Время доставки, пожелания…" />
                 </div>
               </Card>
+
             </div>
 
             <div className="lg:sticky lg:top-24 lg:h-fit">
@@ -204,10 +236,26 @@ function CheckoutPage() {
                     </li>
                   ))}
                 </ul>
+                <div className="mb-2 flex items-center justify-between border-t pt-4 text-sm">
+                  <span className="text-muted-foreground">Товары</span>
+                  <span>{formatPrice(itemsTotal)}</span>
+                </div>
+                {form.shippingMethod === "delivery" && (
+                  <div className="mb-2 flex items-start justify-between text-sm">
+                    <div>
+                      <div>Доставка</div>
+                      <div className="text-[11px] text-muted-foreground">400 ₽ по Истринскому району</div>
+                    </div>
+                    <span>{formatPrice(deliveryFee)}</span>
+                  </div>
+                )}
                 <div className="flex items-center justify-between border-t pt-4 text-lg font-bold">
                   <span>Итого</span>
                   <span>{formatPrice(total)}</span>
                 </div>
+                <p className="mt-1 text-[11px] text-muted-foreground">
+                  Конечная стоимость будет рассчитана после сборки заказа.
+                </p>
                 <Button
                   type="submit"
                   size="lg"
