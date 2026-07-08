@@ -57,6 +57,7 @@ function CheckoutPage() {
   const deliveryDays = useMemo(() => (windowQ.data?.delivery_days ?? ["thursday", "friday", "saturday"]) as string[], [
     windowQ.data,
   ]);
+    }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
