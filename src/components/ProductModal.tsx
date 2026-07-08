@@ -45,7 +45,16 @@ export function ProductModal({
 
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
-      <DialogContent className="max-w-2xl overflow-hidden p-0">
+      <DialogContent className="relative max-w-2xl overflow-hidden p-0">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={onClose}
+          className="absolute left-3 top-3 z-50 flex items-center gap-1 text-muted-foreground hover:text-foreground"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Назад
+        </Button>
         <div className="grid gap-0 md:grid-cols-2">
           <div className="flex aspect-square items-center justify-center bg-secondary md:aspect-auto">
             {product.image_url ? (
