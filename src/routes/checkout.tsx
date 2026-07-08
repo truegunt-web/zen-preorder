@@ -148,11 +148,6 @@ function CheckoutPage() {
                     <Input id="phone" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} className="mt-1" placeholder="+7 ..." />
                     {errors.phone && <p className="mt-1 text-xs text-destructive">{errors.phone}</p>}
                   </div>
-                  <div className="sm:col-span-2">
-                    <Label htmlFor="email">Email (для подтверждения)</Label>
-                    <Input id="email" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className="mt-1" />
-                    {errors.email && <p className="mt-1 text-xs text-destructive">{errors.email}</p>}
-                  </div>
                 </div>
               </Card>
 
