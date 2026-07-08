@@ -236,10 +236,26 @@ function CheckoutPage() {
                     </li>
                   ))}
                 </ul>
+                <div className="mb-2 flex items-center justify-between border-t pt-4 text-sm">
+                  <span className="text-muted-foreground">Товары</span>
+                  <span>{formatPrice(itemsTotal)}</span>
+                </div>
+                {form.shippingMethod === "delivery" && (
+                  <div className="mb-2 flex items-start justify-between text-sm">
+                    <div>
+                      <div>Доставка</div>
+                      <div className="text-[11px] text-muted-foreground">400 ₽ по Истринскому району</div>
+                    </div>
+                    <span>{formatPrice(deliveryFee)}</span>
+                  </div>
+                )}
                 <div className="flex items-center justify-between border-t pt-4 text-lg font-bold">
                   <span>Итого</span>
                   <span>{formatPrice(total)}</span>
                 </div>
+                <p className="mt-1 text-[11px] text-muted-foreground">
+                  Конечная стоимость будет рассчитана после сборки заказа.
+                </p>
                 <Button
                   type="submit"
                   size="lg"
