@@ -70,6 +70,9 @@ function CheckoutPage() {
       parsed.error.issues.forEach((i) => (errs[i.path[0] as string] = i.message));
       setErrors(errs);
       return;
+    if (parsed.data.shippingMethod === "delivery" && (!parsed.data.address || parsed.data.address.trim().length < 5)) {
+      setErrors({ address: "Укажите адрес доставки" });
+      return;
     }
     setErrors({});
     setSubmitting(true);
