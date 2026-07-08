@@ -18,21 +18,25 @@ export const Route = createFileRoute("/checkout")({
   component: CheckoutPage,
 });
 
+const DELIVERY_FEE = 400;
+
 const schema = z.object({
   name: z.string().trim().min(2, "Укажите имя").max(100),
   phone: z.string().trim().min(6, "Укажите телефон").max(30),
-  email: z.string().trim().email("Некорректный email").max(255).optional().or(z.literal("")),
-  address: z.string().trim().min(5, "Укажите адрес доставки").max(300),
+  address: z.string().trim().min(5, "Укажите адрес").max(300),
   comment: z.string().max(500).optional(),
   deliveryDay: z.enum(["thursday", "friday", "saturday"], { message: "Выберите день доставки" }),
+  shippingMethod: z.enum(["delivery", "pickup"], { message: "Выберите способ получения" }),
 });
 
 function CheckoutPage() {
-  const { items, total, clear } = useCart();
+  const { items, total: itemsTotal, clear } = useCart();
   const navigate = useNavigate();
   const [submitting, setSubmitting] = useState(false);
-  const [form, setForm] = useState({ name: "", phone: "", email: "", address: "", comment: "", deliveryDay: "" });
+  const [form, setForm] = useState({ name: "", phone: "", address: "", comment: "", deliveryDay: "", shippingMethod: "delivery" });
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const deliveryFee = form.shippingMethod === "delivery" ? DELIVERY_FEE : 0;
+  const total = itemsTotal + deliveryFee;
 
   const windowQ = useQuery({
     queryKey: ["active-window"],
