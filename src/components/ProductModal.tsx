@@ -1,5 +1,7 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import * as DialogPrimitive from "@radix-ui/react-dialog";
+import { DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Fish, Plus, ArrowLeft } from "lucide-react";
 import { CATEGORY_LABEL, UNIT_LABEL, formatPrice, useCart } from "@/lib/cart";
@@ -44,8 +46,14 @@ export function ProductModal({
   };
 
   return (
-    <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
-      <DialogContent className="relative max-w-2xl overflow-hidden p-0">
+    <DialogPrimitive.Root open={open} onOpenChange={(o) => !o && onClose()}>
+      <DialogPrimitive.Portal>
+        <DialogPrimitive.Content
+          className={cn(
+            "fixed left-[50%] top-[50%] z-50 grid w-full max-w-2xl translate-x-[-50%] translate-y-[-50%] gap-4 overflow-hidden border bg-background p-0 shadow-2xl duration-200",
+            "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 sm:rounded-lg",
+          )}
+        >
         <Button
           variant="ghost"
           size="sm"
@@ -55,14 +63,19 @@ export function ProductModal({
           <ArrowLeft className="h-4 w-4" />
           Назад
         </Button>
-        <div className="grid gap-0 md:grid-cols-2">
-          <div className="flex aspect-square items-center justify-center bg-secondary md:aspect-auto">
+        <div className="relative grid gap-0 md:grid-cols-2">
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Закрыть"
+            className="flex aspect-square items-center justify-center bg-secondary md:aspect-auto cursor-pointer"
+          >
             {product.image_url ? (
               <img src={product.image_url} alt={product.name} className="h-full w-full object-cover" />
             ) : (
               <Fish className="h-24 w-24 text-primary/30" strokeWidth={1.2} />
             )}
-          </div>
+          </button>
           <div className="flex flex-col gap-4 p-6">
             <DialogHeader className="space-y-3 text-left">
               <Badge className="w-fit" variant="secondary">
@@ -105,7 +118,8 @@ export function ProductModal({
             </Button>
           </div>
         </div>
-      </DialogContent>
-    </Dialog>
+        </DialogPrimitive.Content>
+      </DialogPrimitive.Portal>
+    </DialogPrimitive.Root>
   );
 }
