@@ -75,7 +75,7 @@ export function ProductModal({
             ) : (
               <Fish className="h-24 w-24 text-primary/30" strokeWidth={1.2} />
             )}
-          </div>
+          </button>
           <div className="flex flex-col gap-4 p-6">
             <DialogHeader className="space-y-3 text-left">
               <Badge className="w-fit" variant="secondary">
