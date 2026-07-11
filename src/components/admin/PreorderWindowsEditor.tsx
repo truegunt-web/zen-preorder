@@ -120,7 +120,7 @@ export function PreorderWindowsEditor() {
               description: "",
               opens_at: new Date().toISOString(),
               closes_at: new Date(Date.now() + 3 * 24 * 3600 * 1000).toISOString(),
-              delivery_days: ["чт", "пт", "сб"],
+              delivery_days: ["thursday", "friday", "saturday"],
               is_active: true,
             })
           }
