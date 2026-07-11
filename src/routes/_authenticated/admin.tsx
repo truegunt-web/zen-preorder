@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Dialog,
   DialogContent,
@@ -22,6 +23,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
+import { ImageUploader } from "@/components/ImageUploader";
+import { SiteContentEditor } from "@/components/admin/SiteContentEditor";
+import { PreorderWindowsEditor } from "@/components/admin/PreorderWindowsEditor";
 import type { Database } from "@/integrations/supabase/types";
 
 type ProductCategory = Database["public"]["Enums"]["product_category"];
@@ -33,6 +37,7 @@ import { CATEGORY_LABEL, UNIT_LABEL, formatPrice } from "@/lib/cart";
 export const Route = createFileRoute("/_authenticated/admin")({
   component: AdminPage,
 });
+
 
 type Product = {
   id: string;
