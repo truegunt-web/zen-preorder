@@ -17,15 +17,31 @@ import {
 import { toast } from "sonner";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 
+type DeliveryDay = "thursday" | "friday" | "saturday";
 type PreorderWindow = {
   id: string;
   title: string;
   description: string | null;
   opens_at: string;
   closes_at: string;
-  delivery_days: string[];
+  delivery_days: DeliveryDay[];
   is_active: boolean;
 };
+
+const DAY_LABEL: Record<DeliveryDay, string> = {
+  thursday: "чт",
+  friday: "пт",
+  saturday: "сб",
+};
+const DAY_FROM_LABEL: Record<string, DeliveryDay> = {
+  чт: "thursday",
+  пт: "friday",
+  сб: "saturday",
+  thursday: "thursday",
+  friday: "friday",
+  saturday: "saturday",
+};
+
 
 const toLocalInput = (iso: string) => {
   const d = new Date(iso);
