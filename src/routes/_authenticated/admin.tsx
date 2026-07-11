@@ -407,21 +407,15 @@ function ProductEditor({
               onChange={(e) => setField("sort_order", Number(e.target.value))}
             />
           </div>
-          <div className="space-y-2 sm:col-span-2">
-            <Label>URL картинки</Label>
-            <Input
-              placeholder="/catalog/fish_chilled.jpg или https://…"
+          <div className="sm:col-span-2">
+            <ImageUploader
+              label="Картинка товара"
               value={form.image_url ?? ""}
-              onChange={(e) => setField("image_url", e.target.value)}
+              onChange={(v) => setField("image_url", v)}
+              aspect="aspect-square"
             />
-            {form.image_url && (
-              <img
-                src={form.image_url}
-                alt=""
-                className="mt-2 h-24 w-24 rounded object-cover"
-              />
-            )}
           </div>
+
           <div className="space-y-2 sm:col-span-2">
             <Label>Описание</Label>
             <Textarea
