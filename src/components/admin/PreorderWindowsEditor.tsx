@@ -157,7 +157,7 @@ export function PreorderWindowsEditor() {
                       {new Date(w.closes_at).toLocaleString("ru-RU")}
                     </p>
                     <p className="mt-1 text-xs text-muted-foreground">
-                      Дни доставки: {w.delivery_days.join(", ")}
+                      Дни доставки: {w.delivery_days.map((d) => DAY_LABEL[d] ?? d).join(", ")}
                     </p>
                   </div>
                   <div className="flex flex-wrap items-center gap-2">
@@ -230,7 +230,7 @@ function WindowEditor({
         description: form.description ?? null,
         opens_at: new Date(form.opens_at ?? new Date()).toISOString(),
         closes_at: new Date(form.closes_at ?? new Date()).toISOString(),
-        delivery_days: form.delivery_days ?? ["чт", "пт", "сб"],
+        delivery_days: (form.delivery_days ?? ["thursday", "friday", "saturday"]) as DeliveryDay[],
         is_active: form.is_active ?? true,
       };
       if (w?.id) {
@@ -295,20 +295,21 @@ function WindowEditor({
             </div>
           </div>
           <div className="space-y-2">
-            <Label>Дни доставки (через запятую)</Label>
+            <Label>Дни доставки (через запятую: чт, пт, сб)</Label>
             <Input
-              value={(form.delivery_days ?? []).join(", ")}
+              value={(form.delivery_days ?? []).map((d) => DAY_LABEL[d] ?? d).join(", ")}
               onChange={(e) =>
                 setForm((f) => ({
                   ...f,
                   delivery_days: e.target.value
                     .split(",")
-                    .map((s) => s.trim())
-                    .filter(Boolean),
+                    .map((s) => DAY_FROM_LABEL[s.trim().toLowerCase()])
+                    .filter((d): d is DeliveryDay => !!d),
                 }))
               }
             />
           </div>
+
           <div className="flex items-center gap-2">
             <Switch
               checked={form.is_active ?? true}
