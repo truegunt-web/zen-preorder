@@ -11,10 +11,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import heroImg from "@/assets/hero-seafood.jpg";
+import { normalizeContent } from "@/lib/site-content";
 
 export const Route = createFileRoute("/")({
   component: HomePage,
 });
+
 
 type Product = {
   id: string;
@@ -41,6 +43,21 @@ function HomePage() {
   const [selected, setSelected] = useState<Product | null>(null);
   const [category, setCategory] = useState<string>("all");
   const [search, setSearch] = useState("");
+
+  const contentQ = useQuery({
+    queryKey: ["site-content"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("site_content")
+        .select("content")
+        .eq("id", "main")
+        .maybeSingle();
+      if (error) throw error;
+      return normalizeContent(data?.content);
+    },
+  });
+  const content = contentQ.data ?? normalizeContent(null);
+
 
   const windowQ = useQuery({
     queryKey: ["active-window"],
@@ -95,16 +112,26 @@ function HomePage() {
         <section className="mb-8 grid gap-6 lg:grid-cols-2 lg:items-center">
           <div className="order-2 lg:order-1">
             <h1 className="text-4xl font-bold leading-tight sm:text-5xl">
-              Свежий улов —<br />
-              <span className="text-accent">на вашем столе</span>
+              {content.hero_title_line1}
+              {content.hero_title_line2 && (
+                <>
+                  <br />
+                  <span className="text-accent">{content.hero_title_line2}</span>
+                </>
+              )}
             </h1>
-            <p className="mt-4 text-lg text-muted-foreground">
-              Собираем предзаказ рыбы, морепродуктов и полуфабрикатов раз в неделю. Мы закупаем ровно то, что заказали
-              вы — минимум остатков, максимум свежести.
+            <p className="mt-4 text-lg text-muted-foreground whitespace-pre-line">
+              {content.hero_subtitle}
             </p>
           </div>
           <div className="order-1 overflow-hidden rounded-3xl shadow-elevated lg:order-2">
-            <img src={heroImg} alt="Свежая рыба на льду" width={1600} height={900} className="h-full w-full object-cover" />
+            <img
+              src={content.hero_image_url || heroImg}
+              alt="Свежая рыба на льду"
+              width={1600}
+              height={900}
+              className="h-full w-full object-cover"
+            />
           </div>
         </section>
 
@@ -128,9 +155,11 @@ function HomePage() {
         {/* Filters */}
         <section className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h2 className="text-2xl font-bold">Каталог недели</h2>
+            <h2 className="text-2xl font-bold">{content.catalog_title}</h2>
             <p className="text-sm text-muted-foreground">
-              {filtered.length} {filtered.length === 1 ? "позиция" : "позиций"}
+              {content.catalog_subtitle
+                ? content.catalog_subtitle
+                : `${filtered.length} ${filtered.length === 1 ? "позиция" : "позиций"}`}
             </p>
           </div>
           <div className="relative w-full sm:w-72">
@@ -143,6 +172,7 @@ function HomePage() {
             />
           </div>
         </section>
+
 
         <div className="mb-6 flex flex-wrap gap-2">
           {categories.map((c) => (
@@ -176,15 +206,39 @@ function HomePage() {
             ))}
           </div>
         )}
+
+        {/* Custom sections */}
+        {content.sections.length > 0 && (
+          <div className="mt-12 space-y-8">
+            {content.sections.map((s) => (
+              <section key={s.id} className="rounded-3xl border bg-card p-6 sm:p-8">
+                <div className="grid gap-6 sm:grid-cols-[1fr_auto] sm:items-start">
+                  <div>
+                    <h3 className="text-2xl font-bold">{s.title}</h3>
+                    <p className="mt-3 whitespace-pre-line text-muted-foreground">{s.body}</p>
+                  </div>
+                  {s.image_url && (
+                    <img
+                      src={s.image_url}
+                      alt=""
+                      className="h-40 w-full rounded-xl object-cover sm:w-56"
+                    />
+                  )}
+                </div>
+              </section>
+            ))}
+          </div>
+        )}
       </main>
 
       <ProductModal product={selected} open={!!selected} onClose={() => setSelected(null)} />
 
       <footer className="mt-16 border-t bg-muted/30 py-8">
-        <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
-          © {new Date().getFullYear()} Свежий улов · Предзаказ с доставкой в чт/пт/сб
+        <div className="container mx-auto px-4 text-center text-sm text-muted-foreground whitespace-pre-line">
+          {content.footer_text.replace("{year}", String(new Date().getFullYear()))}
         </div>
       </footer>
     </div>
   );
 }
+

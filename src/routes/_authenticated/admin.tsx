@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Dialog,
   DialogContent,
@@ -22,6 +23,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
+import { ImageUploader } from "@/components/ImageUploader";
+import { SiteContentEditor } from "@/components/admin/SiteContentEditor";
+import { PreorderWindowsEditor } from "@/components/admin/PreorderWindowsEditor";
 import type { Database } from "@/integrations/supabase/types";
 
 type ProductCategory = Database["public"]["Enums"]["product_category"];
@@ -33,6 +37,7 @@ import { CATEGORY_LABEL, UNIT_LABEL, formatPrice } from "@/lib/cart";
 export const Route = createFileRoute("/_authenticated/admin")({
   component: AdminPage,
 });
+
 
 type Product = {
   id: string;
@@ -116,7 +121,7 @@ function AdminPage() {
                 <ArrowLeft className="mr-1 h-4 w-4" /> К витрине
               </Link>
             </Button>
-            <h1 className="text-lg font-bold">Админка каталога</h1>
+            <h1 className="text-lg font-bold">Админка</h1>
           </div>
           <Button variant="ghost" size="sm" onClick={signOut}>
             <LogOut className="mr-1 h-4 w-4" /> Выйти
@@ -125,107 +130,126 @@ function AdminPage() {
       </header>
 
       <main className="container mx-auto px-4 py-8">
-        <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <Select value={filter} onValueChange={setFilter}>
-              <SelectTrigger className="w-56">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Все категории</SelectItem>
-                {CATEGORIES.map((c) => (
-                  <SelectItem key={c} value={c}>
-                    {CATEGORY_LABEL[c] ?? c}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <span className="text-sm text-muted-foreground">
-              {products.length} товаров
-            </span>
-          </div>
-          <Button
-            onClick={() =>
-              setEditing({
-                name: "",
-                category: "fish_chilled",
-                description: "",
-                price: 0,
-                unit: "pcs",
-                min_order: 1,
-                step: 1,
-                image_url: "",
-                is_active: true,
-                sort_order: 100,
-              })
-            }
-          >
-            <Plus className="mr-1 h-4 w-4" /> Добавить товар
-          </Button>
-        </div>
+        <Tabs defaultValue="products" className="space-y-6">
+          <TabsList>
+            <TabsTrigger value="products">Каталог</TabsTrigger>
+            <TabsTrigger value="site">Главная страница</TabsTrigger>
+            <TabsTrigger value="windows">Окна предзаказа</TabsTrigger>
+          </TabsList>
 
-        {productsQ.isLoading ? (
-          <div className="text-muted-foreground">Загрузка…</div>
-        ) : (
-          <Card className="overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead className="bg-muted/60 text-left">
-                  <tr>
-                    <th className="p-3">Фото</th>
-                    <th className="p-3">Название</th>
-                    <th className="p-3">Категория</th>
-                    <th className="p-3 text-right">Цена</th>
-                    <th className="p-3">Ед.</th>
-                    <th className="p-3">Активен</th>
-                    <th className="p-3"></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {products.map((p) => (
-                    <tr key={p.id} className="border-t">
-                      <td className="p-3">
-                        {p.image_url ? (
-                          <img
-                            src={p.image_url}
-                            alt=""
-                            className="h-10 w-10 rounded object-cover"
-                          />
-                        ) : (
-                          <div className="h-10 w-10 rounded bg-muted" />
-                        )}
-                      </td>
-                      <td className="p-3 font-medium">{p.name}</td>
-                      <td className="p-3 text-muted-foreground">
-                        {CATEGORY_LABEL[p.category] ?? p.category}
-                      </td>
-                      <td className="p-3 text-right">{formatPrice(Number(p.price))}</td>
-                      <td className="p-3">{UNIT_LABEL[p.unit] ?? p.unit}</td>
-                      <td className="p-3">
-                        <Switch checked={p.is_active} onCheckedChange={() => toggleActive(p)} />
-                      </td>
-                      <td className="p-3">
-                        <div className="flex justify-end gap-1">
-                          <Button size="icon" variant="ghost" onClick={() => setEditing(p)}>
-                            <Pencil className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            onClick={() => remove(p.id)}
-                          >
-                            <Trash2 className="h-4 w-4 text-destructive" />
-                          </Button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+          <TabsContent value="products" className="space-y-6">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <Select value={filter} onValueChange={setFilter}>
+                  <SelectTrigger className="w-56">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Все категории</SelectItem>
+                    {CATEGORIES.map((c) => (
+                      <SelectItem key={c} value={c}>
+                        {CATEGORY_LABEL[c] ?? c}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <span className="text-sm text-muted-foreground">
+                  {products.length} товаров
+                </span>
+              </div>
+              <Button
+                onClick={() =>
+                  setEditing({
+                    name: "",
+                    category: "fish_chilled",
+                    description: "",
+                    price: 0,
+                    unit: "pcs",
+                    min_order: 1,
+                    step: 1,
+                    image_url: "",
+                    is_active: true,
+                    sort_order: 100,
+                  })
+                }
+              >
+                <Plus className="mr-1 h-4 w-4" /> Добавить товар
+              </Button>
             </div>
-          </Card>
-        )}
+
+            {productsQ.isLoading ? (
+              <div className="text-muted-foreground">Загрузка…</div>
+            ) : (
+              <Card className="overflow-hidden">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead className="bg-muted/60 text-left">
+                      <tr>
+                        <th className="p-3">Фото</th>
+                        <th className="p-3">Название</th>
+                        <th className="p-3">Категория</th>
+                        <th className="p-3 text-right">Цена</th>
+                        <th className="p-3">Ед.</th>
+                        <th className="p-3">Активен</th>
+                        <th className="p-3"></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {products.map((p) => (
+                        <tr key={p.id} className="border-t">
+                          <td className="p-3">
+                            {p.image_url ? (
+                              <img
+                                src={p.image_url}
+                                alt=""
+                                className="h-10 w-10 rounded object-cover"
+                              />
+                            ) : (
+                              <div className="h-10 w-10 rounded bg-muted" />
+                            )}
+                          </td>
+                          <td className="p-3 font-medium">{p.name}</td>
+                          <td className="p-3 text-muted-foreground">
+                            {CATEGORY_LABEL[p.category] ?? p.category}
+                          </td>
+                          <td className="p-3 text-right">{formatPrice(Number(p.price))}</td>
+                          <td className="p-3">{UNIT_LABEL[p.unit] ?? p.unit}</td>
+                          <td className="p-3">
+                            <Switch checked={p.is_active} onCheckedChange={() => toggleActive(p)} />
+                          </td>
+                          <td className="p-3">
+                            <div className="flex justify-end gap-1">
+                              <Button size="icon" variant="ghost" onClick={() => setEditing(p)}>
+                                <Pencil className="h-4 w-4" />
+                              </Button>
+                              <Button
+                                size="icon"
+                                variant="ghost"
+                                onClick={() => remove(p.id)}
+                              >
+                                <Trash2 className="h-4 w-4 text-destructive" />
+                              </Button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </Card>
+            )}
+          </TabsContent>
+
+          <TabsContent value="site">
+            <SiteContentEditor />
+          </TabsContent>
+
+          <TabsContent value="windows">
+            <PreorderWindowsEditor />
+          </TabsContent>
+        </Tabs>
       </main>
+
 
       <ProductEditor
         product={editing}
@@ -383,21 +407,15 @@ function ProductEditor({
               onChange={(e) => setField("sort_order", Number(e.target.value))}
             />
           </div>
-          <div className="space-y-2 sm:col-span-2">
-            <Label>URL картинки</Label>
-            <Input
-              placeholder="/catalog/fish_chilled.jpg или https://…"
+          <div className="sm:col-span-2">
+            <ImageUploader
+              label="Картинка товара"
               value={form.image_url ?? ""}
-              onChange={(e) => setField("image_url", e.target.value)}
+              onChange={(v) => setField("image_url", v)}
+              aspect="aspect-square"
             />
-            {form.image_url && (
-              <img
-                src={form.image_url}
-                alt=""
-                className="mt-2 h-24 w-24 rounded object-cover"
-              />
-            )}
           </div>
+
           <div className="space-y-2 sm:col-span-2">
             <Label>Описание</Label>
             <Textarea
