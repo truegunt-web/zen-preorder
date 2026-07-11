@@ -11,10 +11,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import heroImg from "@/assets/hero-seafood.jpg";
+import { normalizeContent } from "@/lib/site-content";
 
 export const Route = createFileRoute("/")({
   component: HomePage,
 });
+
 
 type Product = {
   id: string;
@@ -41,6 +43,21 @@ function HomePage() {
   const [selected, setSelected] = useState<Product | null>(null);
   const [category, setCategory] = useState<string>("all");
   const [search, setSearch] = useState("");
+
+  const contentQ = useQuery({
+    queryKey: ["site-content"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("site_content")
+        .select("content")
+        .eq("id", "main")
+        .maybeSingle();
+      if (error) throw error;
+      return normalizeContent(data?.content);
+    },
+  });
+  const content = contentQ.data ?? normalizeContent(null);
+
 
   const windowQ = useQuery({
     queryKey: ["active-window"],
