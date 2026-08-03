@@ -34,6 +34,7 @@ const schema = z.object({
 function CheckoutPage() {
   const { items, total: itemsTotal, clear } = useCart();
   const navigate = useNavigate();
+  const submitOrder = useServerFn(createOrder);
   const [submitting, setSubmitting] = useState(false);
   const [form, setForm] = useState({ name: "", phone: "", address: "", comment: "", deliveryDay: "", shippingMethod: "delivery" });
   const [errors, setErrors] = useState<Record<string, string>>({});
