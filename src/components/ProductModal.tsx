@@ -50,9 +50,10 @@ export function ProductModal({
       <DialogPrimitive.Portal>
         <DialogPrimitive.Content
           className={cn(
-            "fixed left-[50%] top-[50%] z-50 grid w-full max-w-2xl translate-x-[-50%] translate-y-[-50%] gap-4 overflow-hidden border bg-background p-0 shadow-2xl duration-200",
+            "fixed left-[50%] top-[50%] z-50 grid max-h-[92vh] w-[calc(100%-1.5rem)] max-w-2xl translate-x-[-50%] translate-y-[-50%] gap-4 overflow-y-auto rounded-lg border bg-background p-0 shadow-2xl duration-200",
             "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 sm:rounded-lg",
           )}
+
         >
         <Button
           variant="ghost"
@@ -68,14 +69,19 @@ export function ProductModal({
             type="button"
             onClick={onClose}
             aria-label="Закрыть"
-            className="flex aspect-square items-center justify-center bg-secondary md:aspect-auto cursor-pointer"
+            className="relative flex aspect-square w-full cursor-pointer items-center justify-center overflow-hidden bg-secondary md:aspect-auto"
           >
             {product.image_url ? (
-              <img src={product.image_url} alt={product.name} className="h-full w-full object-cover" />
+              <img
+                src={product.image_url}
+                alt={product.name}
+                className="absolute inset-0 h-full w-full object-cover object-center"
+              />
             ) : (
               <Fish className="h-24 w-24 text-primary/30" strokeWidth={1.2} />
             )}
           </button>
+
           <div className="flex flex-col gap-4 p-6">
             <DialogHeader className="space-y-3 text-left">
               <Badge className="w-fit" variant="secondary">

@@ -26,6 +26,7 @@ import { Switch } from "@/components/ui/switch";
 import { ImageUploader } from "@/components/ImageUploader";
 import { SiteContentEditor } from "@/components/admin/SiteContentEditor";
 import { PreorderWindowsEditor } from "@/components/admin/PreorderWindowsEditor";
+import { OrdersEditor } from "@/components/admin/OrdersEditor";
 import type { Database } from "@/integrations/supabase/types";
 
 type ProductCategory = Database["public"]["Enums"]["product_category"];
@@ -131,11 +132,18 @@ function AdminPage() {
 
       <main className="container mx-auto px-4 py-8">
         <Tabs defaultValue="products" className="space-y-6">
-          <TabsList>
+          <TabsList className="flex-wrap">
             <TabsTrigger value="products">Каталог</TabsTrigger>
+            <TabsTrigger value="orders">Заказы</TabsTrigger>
             <TabsTrigger value="site">Главная страница</TabsTrigger>
             <TabsTrigger value="windows">Окна предзаказа</TabsTrigger>
           </TabsList>
+
+          <TabsContent value="orders">
+            <OrdersEditor />
+          </TabsContent>
+
+
 
           <TabsContent value="products" className="space-y-6">
             <div className="flex flex-wrap items-center justify-between gap-3">

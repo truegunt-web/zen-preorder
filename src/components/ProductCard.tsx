@@ -38,7 +38,7 @@ export function ProductCard({ product, onOpen }: { product: Product; onOpen: () 
     <Card className="group flex flex-col overflow-hidden border-border/60 bg-card p-0 shadow-card transition hover:-translate-y-0.5 hover:shadow-elevated">
       <button
         onClick={onOpen}
-        className="relative flex aspect-[4/3] w-full items-center justify-center overflow-hidden bg-secondary"
+        className="relative flex aspect-square w-full items-center justify-center overflow-hidden bg-secondary sm:aspect-[4/3]"
         aria-label={`Открыть карточку ${product.name}`}
       >
         {product.image_url ? (
@@ -46,9 +46,10 @@ export function ProductCard({ product, onOpen }: { product: Product; onOpen: () 
             src={product.image_url}
             alt={product.name}
             loading="lazy"
-            className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+            className="absolute inset-0 h-full w-full object-cover object-center transition duration-500 group-hover:scale-105"
           />
         ) : (
+
           <Fish className="h-16 w-16 text-primary/30" strokeWidth={1.2} />
         )}
         <Badge className="absolute left-3 top-3 bg-background/90 text-foreground shadow-sm backdrop-blur">
