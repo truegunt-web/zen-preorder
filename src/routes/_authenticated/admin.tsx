@@ -26,6 +26,7 @@ import { Switch } from "@/components/ui/switch";
 import { ImageUploader } from "@/components/ImageUploader";
 import { SiteContentEditor } from "@/components/admin/SiteContentEditor";
 import { PreorderWindowsEditor } from "@/components/admin/PreorderWindowsEditor";
+import { OrdersEditor } from "@/components/admin/OrdersEditor";
 import type { Database } from "@/integrations/supabase/types";
 
 type ProductCategory = Database["public"]["Enums"]["product_category"];
