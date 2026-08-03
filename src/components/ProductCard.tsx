@@ -48,6 +48,7 @@ export function ProductCard({ product, onOpen }: { product: Product; onOpen: () 
             loading="lazy"
             className="absolute inset-0 h-full w-full object-cover object-center transition duration-500 group-hover:scale-105"
           />
+        ) : (
 
           <Fish className="h-16 w-16 text-primary/30" strokeWidth={1.2} />
         )}
