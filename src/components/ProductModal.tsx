@@ -69,14 +69,19 @@ export function ProductModal({
             type="button"
             onClick={onClose}
             aria-label="Закрыть"
-            className="flex aspect-square items-center justify-center bg-secondary md:aspect-auto cursor-pointer"
+            className="relative flex aspect-square w-full cursor-pointer items-center justify-center overflow-hidden bg-secondary md:aspect-auto"
           >
             {product.image_url ? (
-              <img src={product.image_url} alt={product.name} className="h-full w-full object-cover" />
+              <img
+                src={product.image_url}
+                alt={product.name}
+                className="absolute inset-0 h-full w-full object-cover object-center"
+              />
             ) : (
               <Fish className="h-24 w-24 text-primary/30" strokeWidth={1.2} />
             )}
           </button>
+
           <div className="flex flex-col gap-4 p-6">
             <DialogHeader className="space-y-3 text-left">
               <Badge className="w-fit" variant="secondary">
