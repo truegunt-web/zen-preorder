@@ -78,40 +78,26 @@ function CheckoutPage() {
     setErrors({});
     setSubmitting(true);
     try {
-      const { data: user } = await supabase.auth.getUser();
-      const { data: order, error: orderErr } = await supabase
-        .from("orders")
-        .insert({
-          user_id: user.user?.id ?? null,
-          window_id: windowQ.data?.id ?? null,
-          delivery_day: parsed.data.deliveryDay,
-          customer_name: parsed.data.name,
-          customer_phone: parsed.data.phone,
-          customer_email: null,
-          address: parsed.data.shippingMethod === "delivery" ? (parsed.data.address ?? "") : "Самовывоз",
-          comment: parsed.data.comment || null,
-          total,
-        })
-        .select("id, order_number")
-        .single();
-      if (orderErr) throw orderErr;
-
-      const { error: itemsErr } = await supabase.from("order_items").insert(
-        items.map((it) => ({
-          order_id: order.id,
-          product_id: it.productId,
-          product_name: it.name,
-          unit: it.unit as "kg" | "g" | "pcs" | "pack",
-          quantity: it.quantity,
-          price: it.price,
-          comment: it.comment || null,
-        })),
-      );
-      if (itemsErr) throw itemsErr;
+      const { orderNumber } = await submitOrder({
+        data: {
+          name: parsed.data.name,
+          phone: parsed.data.phone,
+          address: parsed.data.address ?? "",
+          comment: parsed.data.comment ?? "",
+          deliveryDay: parsed.data.deliveryDay,
+          shippingMethod: parsed.data.shippingMethod,
+          windowId: windowQ.data?.id ?? null,
+          items: items.map((it) => ({
+            productId: it.productId,
+            quantity: it.quantity,
+            comment: it.comment || "",
+          })),
+        },
+      });
 
       clear();
-      toast.success(`Заявка №${order.order_number} принята`);
-      navigate({ to: "/order-success", search: { n: order.order_number } });
+      toast.success(`Заявка №${orderNumber} принята`);
+      navigate({ to: "/order-success", search: { n: orderNumber } });
     } catch (err) {
       console.error(err);
       toast.error("Не удалось оформить заявку", { description: (err as Error).message });
