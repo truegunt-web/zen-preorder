@@ -132,11 +132,18 @@ function AdminPage() {
 
       <main className="container mx-auto px-4 py-8">
         <Tabs defaultValue="products" className="space-y-6">
-          <TabsList>
+          <TabsList className="flex-wrap">
             <TabsTrigger value="products">Каталог</TabsTrigger>
+            <TabsTrigger value="orders">Заказы</TabsTrigger>
             <TabsTrigger value="site">Главная страница</TabsTrigger>
             <TabsTrigger value="windows">Окна предзаказа</TabsTrigger>
           </TabsList>
+
+          <TabsContent value="orders">
+            <OrdersEditor />
+          </TabsContent>
+
+
 
           <TabsContent value="products" className="space-y-6">
             <div className="flex flex-wrap items-center justify-between gap-3">
