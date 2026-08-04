@@ -9,7 +9,7 @@ import { ProductModal } from "@/components/ProductModal";
 import { CATEGORY_LABEL } from "@/lib/cart";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
+import { Search, Send } from "lucide-react";
 import heroImg from "@/assets/hero-seafood.jpg";
 import { normalizeContent } from "@/lib/site-content";
 
@@ -281,8 +281,17 @@ function HomePage() {
       <ProductModal product={selected} open={!!selected} onClose={() => setSelected(null)} />
 
       <footer className="mt-16 border-t bg-muted/30 py-8">
-        <div className="container mx-auto px-4 text-center text-sm text-muted-foreground whitespace-pre-line">
-          {content.footer_text.replace("{year}", String(new Date().getFullYear()))}
+        <div className="container mx-auto flex flex-col items-center gap-4 px-4 text-center text-sm text-muted-foreground whitespace-pre-line">
+          <div>{content.footer_text.replace("{year}", String(new Date().getFullYear()))}</div>
+          <a
+            href="https://t.me/rybmanru"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Telegram Rybman"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-foreground transition-opacity hover:opacity-85"
+          >
+            <Send className="h-5 w-5" />
+          </a>
         </div>
       </footer>
     </div>

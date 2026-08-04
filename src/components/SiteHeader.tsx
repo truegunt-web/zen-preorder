@@ -1,9 +1,10 @@
 import { Link } from "@tanstack/react-router";
-import { Fish, Settings } from "lucide-react";
+import { Settings } from "lucide-react";
 import { useEffect, useState } from "react";
 import { CartSheet } from "./CartSheet";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
+import logoAsset from "@/assets/logo-znak.png.asset.json";
 
 export function SiteHeader() {
   const [signedIn, setSignedIn] = useState(false);
@@ -20,8 +21,12 @@ export function SiteHeader() {
     <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur-lg">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <Link to="/" className="flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-            <Fish className="h-5 w-5" />
+          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 p-1.5">
+            <img
+              src={logoAsset.url}
+              alt="Логотип Rybman"
+              className="h-full w-full object-contain"
+            />
           </div>
           <div className="flex flex-col leading-tight">
             <span className="text-base font-bold">Rybman</span>
