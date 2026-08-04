@@ -60,9 +60,13 @@ export function ProductCard({ product, onOpen }: { product: Product; onOpen: () 
       <div className="flex flex-1 flex-col gap-3 p-4">
         <div className="flex-1">
           <h3 className="line-clamp-2 text-base font-semibold leading-snug">{product.name}</h3>
+          {product.description && (
+            <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">{product.description}</p>
+          )}
           <p className="mt-1 text-xs text-muted-foreground">
             Мин. заказ: {Number(product.min_order)} {UNIT_LABEL[product.unit]}
           </p>
+
         </div>
 
         <div className="flex items-end justify-between">
