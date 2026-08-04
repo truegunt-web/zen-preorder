@@ -9,7 +9,7 @@ import { ProductModal } from "@/components/ProductModal";
 import { CATEGORY_LABEL } from "@/lib/cart";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
+import { Search, Send } from "lucide-react";
 import heroImg from "@/assets/hero-seafood.jpg";
 import { normalizeContent } from "@/lib/site-content";
 

@@ -1,9 +1,10 @@
 import { Link } from "@tanstack/react-router";
-import { Fish, Settings } from "lucide-react";
+import { Settings } from "lucide-react";
 import { useEffect, useState } from "react";
 import { CartSheet } from "./CartSheet";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
+import logoAsset from "@/assets/logo-znak.png.asset.json";
 
 export function SiteHeader() {
   const [signedIn, setSignedIn] = useState(false);
