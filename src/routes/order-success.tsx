@@ -8,6 +8,16 @@ import { CheckCircle2 } from "lucide-react";
 export const Route = createFileRoute("/order-success")({
   validateSearch: (s) => z.object({ n: z.coerce.number().optional() }).parse(s),
   component: SuccessPage,
+  head: () => ({
+    meta: [
+      { title: "Заявка принята — Rybman" },
+      { name: "description", content: "Ваша заявка в Rybman принята: мы свяжемся для подтверждения состава и суммы заказа." },
+      { name: "robots", content: "noindex, nofollow" },
+      { property: "og:title", content: "Заявка принята — Rybman" },
+      { property: "og:description", content: "Заявка на предзаказ рыбы и морепродуктов Rybman принята." },
+      { property: "og:type", content: "website" },
+    ],
+  }),
 });
 
 function SuccessPage() {

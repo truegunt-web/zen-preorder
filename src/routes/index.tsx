@@ -13,9 +13,56 @@ import { Search } from "lucide-react";
 import heroImg from "@/assets/hero-seafood.jpg";
 import { normalizeContent } from "@/lib/site-content";
 
+const SITE_URL = "https://zen-preorder.lovable.app";
+const PAGE_TITLE = "Rybman — купить свежую рыбу и морепродукты в Истре";
+const PAGE_DESCRIPTION =
+  "Rybman: свежая охлаждённая рыба, слабосолёная и копчёная рыба, красная икра, морепродукты, маринады и полуфабрикаты по предзаказу. Доставка по Истре и Истринскому району в чт, пт и сб.";
+
 export const Route = createFileRoute("/")({
   component: HomePage,
+  head: () => ({
+    meta: [
+      { title: PAGE_TITLE },
+      { name: "description", content: PAGE_DESCRIPTION },
+      { name: "keywords", content: "рыба Истра, купить рыбу Истра, морепродукты Истра, красная икра, копчёная рыба, слабосолёная сёмга, доставка рыбы Истринский район, Rybman" },
+      { property: "og:title", content: PAGE_TITLE },
+      { property: "og:description", content: PAGE_DESCRIPTION },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: SITE_URL + "/" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: PAGE_TITLE },
+      { name: "twitter:description", content: PAGE_DESCRIPTION },
+    ],
+    links: [{ rel: "canonical", href: SITE_URL + "/" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Store",
+          name: "Rybman",
+          description: PAGE_DESCRIPTION,
+          url: SITE_URL,
+          image: SITE_URL + "/catalog/fish_chilled.jpg",
+          priceRange: "₽₽",
+          areaServed: { "@type": "Place", name: "Истра и Истринский район, Московская область" },
+          address: { "@type": "PostalAddress", addressLocality: "Истра", addressRegion: "Московская область", addressCountry: "RU" },
+          makesOffer: [
+            "Охлаждённая рыба",
+            "Слабосолёная рыба",
+            "Копчёная рыба",
+            "Красная икра",
+            "Морепродукты",
+            "Рыба в маринаде",
+            "Полуфабрикаты",
+            "Рыбные консервы",
+          ].map((n) => ({ "@type": "Offer", itemOffered: { "@type": "Product", name: n } })),
+        }),
+      },
+    ],
+  }),
 });
+
 
 
 type Product = {

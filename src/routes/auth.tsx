@@ -11,6 +11,16 @@ import { Fish } from "lucide-react";
 export const Route = createFileRoute("/auth")({
   ssr: false,
   component: AuthPage,
+  head: () => ({
+    meta: [
+      { title: "Вход для сотрудников — Rybman" },
+      { name: "description", content: "Вход в панель управления магазина Rybman." },
+      { name: "robots", content: "noindex, nofollow" },
+      { property: "og:title", content: "Вход для сотрудников — Rybman" },
+      { property: "og:description", content: "Вход в панель управления магазина Rybman." },
+      { property: "og:type", content: "website" },
+    ],
+  }),
 });
 
 function AuthPage() {
@@ -49,7 +59,7 @@ function AuthPage() {
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground">
             <Fish className="h-5 w-5" />
           </div>
-          <span className="font-bold">Свежий улов</span>
+          <span className="font-bold">Rybman</span>
         </Link>
         <h1 className="text-2xl font-bold">
           {mode === "signin" ? "Вход в админку" : "Регистрация администратора"}
