@@ -24,8 +24,8 @@ export function SiteHeader() {
             <Fish className="h-5 w-5" />
           </div>
           <div className="flex flex-col leading-tight">
-            <span className="text-base font-bold">Свежий улов</span>
-            <span className="text-[10px] uppercase tracking-widest text-muted-foreground">Предзаказ недели</span>
+            <span className="text-base font-bold">Rybman</span>
+            <span className="text-[10px] uppercase tracking-widest text-muted-foreground">Рыба и морепродукты</span>
           </div>
         </Link>
         <div className="flex items-center gap-2">

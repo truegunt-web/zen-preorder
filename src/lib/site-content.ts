@@ -17,14 +17,14 @@ export type SiteContent = {
 };
 
 export const DEFAULT_SITE_CONTENT: SiteContent = {
-  hero_title_line1: "Свежий улов —",
-  hero_title_line2: "на вашем столе",
+  hero_title_line1: "Rybman —",
+  hero_title_line2: "свежая рыба к вашему столу",
   hero_subtitle:
     "Собираем предзаказ рыбы, морепродуктов и полуфабрикатов раз в неделю.",
   hero_image_url: "",
   catalog_title: "Каталог недели",
   catalog_subtitle: "",
-  footer_text: "© Свежий улов",
+  footer_text: "© Rybman · Рыба, морепродукты и деликатесы",
   sections: [],
 };
 
