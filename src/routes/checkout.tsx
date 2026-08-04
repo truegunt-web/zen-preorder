@@ -18,6 +18,16 @@ import { ArrowLeft, Loader2 } from "lucide-react";
 
 export const Route = createFileRoute("/checkout")({
   component: CheckoutPage,
+  head: () => ({
+    meta: [
+      { title: "Оформление предзаказа — Rybman" },
+      { name: "description", content: "Оформите предзаказ рыбы и морепродуктов Rybman: выберите день доставки в Истринском районе или самовывоз." },
+      { name: "robots", content: "noindex, nofollow" },
+      { property: "og:title", content: "Оформление предзаказа — Rybman" },
+      { property: "og:description", content: "Оформление предзаказа рыбы и морепродуктов Rybman." },
+      { property: "og:type", content: "website" },
+    ],
+  }),
 });
 
 const DELIVERY_FEE = 400;

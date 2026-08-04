@@ -11,6 +11,16 @@ import { Fish } from "lucide-react";
 export const Route = createFileRoute("/auth")({
   ssr: false,
   component: AuthPage,
+  head: () => ({
+    meta: [
+      { title: "Вход для сотрудников — Rybman" },
+      { name: "description", content: "Вход в панель управления магазина Rybman." },
+      { name: "robots", content: "noindex, nofollow" },
+      { property: "og:title", content: "Вход для сотрудников — Rybman" },
+      { property: "og:description", content: "Вход в панель управления магазина Rybman." },
+      { property: "og:type", content: "website" },
+    ],
+  }),
 });
 
 function AuthPage() {
