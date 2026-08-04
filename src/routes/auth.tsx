@@ -59,7 +59,7 @@ function AuthPage() {
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground">
             <Fish className="h-5 w-5" />
           </div>
-          <span className="font-bold">Свежий улов</span>
+          <span className="font-bold">Rybman</span>
         </Link>
         <h1 className="text-2xl font-bold">
           {mode === "signin" ? "Вход в админку" : "Регистрация администратора"}
