@@ -27,6 +27,7 @@ import { ImageUploader } from "@/components/ImageUploader";
 import { SiteContentEditor } from "@/components/admin/SiteContentEditor";
 import { PreorderWindowsEditor } from "@/components/admin/PreorderWindowsEditor";
 import { OrdersEditor } from "@/components/admin/OrdersEditor";
+import { SupplierOrder } from "@/components/admin/SupplierOrder";
 import type { Database } from "@/integrations/supabase/types";
 
 type ProductCategory = Database["public"]["Enums"]["product_category"];
@@ -135,12 +136,17 @@ function AdminPage() {
           <TabsList className="flex-wrap">
             <TabsTrigger value="products">Каталог</TabsTrigger>
             <TabsTrigger value="orders">Заказы</TabsTrigger>
+            <TabsTrigger value="supplier">Заказ поставщику</TabsTrigger>
             <TabsTrigger value="site">Главная страница</TabsTrigger>
             <TabsTrigger value="windows">Окна предзаказа</TabsTrigger>
           </TabsList>
 
           <TabsContent value="orders">
             <OrdersEditor />
+          </TabsContent>
+
+          <TabsContent value="supplier">
+            <SupplierOrder />
           </TabsContent>
 
 
