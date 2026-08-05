@@ -135,12 +135,17 @@ function AdminPage() {
           <TabsList className="flex-wrap">
             <TabsTrigger value="products">Каталог</TabsTrigger>
             <TabsTrigger value="orders">Заказы</TabsTrigger>
+            <TabsTrigger value="supplier">Заказ поставщику</TabsTrigger>
             <TabsTrigger value="site">Главная страница</TabsTrigger>
             <TabsTrigger value="windows">Окна предзаказа</TabsTrigger>
           </TabsList>
 
           <TabsContent value="orders">
             <OrdersEditor />
+          </TabsContent>
+
+          <TabsContent value="supplier">
+            <SupplierOrder />
           </TabsContent>
 
 
