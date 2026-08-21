@@ -28,6 +28,7 @@ import { SiteContentEditor } from "@/components/admin/SiteContentEditor";
 import { PreorderWindowsEditor } from "@/components/admin/PreorderWindowsEditor";
 import { OrdersEditor } from "@/components/admin/OrdersEditor";
 import { SupplierOrder } from "@/components/admin/SupplierOrder";
+import { AccountSettings } from "@/components/admin/AccountSettings";
 import type { Database } from "@/integrations/supabase/types";
 
 type ProductCategory = Database["public"]["Enums"]["product_category"];
