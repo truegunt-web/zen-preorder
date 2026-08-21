@@ -140,7 +140,9 @@ function AdminPage() {
             <TabsTrigger value="supplier">Заказ поставщику</TabsTrigger>
             <TabsTrigger value="site">Главная страница</TabsTrigger>
             <TabsTrigger value="windows">Окна предзаказа</TabsTrigger>
+            <TabsTrigger value="account">Доступ</TabsTrigger>
           </TabsList>
+
 
           <TabsContent value="orders">
             <OrdersEditor />
