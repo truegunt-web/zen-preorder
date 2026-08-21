@@ -28,6 +28,7 @@ import { SiteContentEditor } from "@/components/admin/SiteContentEditor";
 import { PreorderWindowsEditor } from "@/components/admin/PreorderWindowsEditor";
 import { OrdersEditor } from "@/components/admin/OrdersEditor";
 import { SupplierOrder } from "@/components/admin/SupplierOrder";
+import { AccountSettings } from "@/components/admin/AccountSettings";
 import type { Database } from "@/integrations/supabase/types";
 
 type ProductCategory = Database["public"]["Enums"]["product_category"];
@@ -139,7 +140,9 @@ function AdminPage() {
             <TabsTrigger value="supplier">Заказ поставщику</TabsTrigger>
             <TabsTrigger value="site">Главная страница</TabsTrigger>
             <TabsTrigger value="windows">Окна предзаказа</TabsTrigger>
+            <TabsTrigger value="account">Доступ</TabsTrigger>
           </TabsList>
+
 
           <TabsContent value="orders">
             <OrdersEditor />
@@ -261,7 +264,12 @@ function AdminPage() {
           <TabsContent value="windows">
             <PreorderWindowsEditor />
           </TabsContent>
+
+          <TabsContent value="account">
+            <AccountSettings />
+          </TabsContent>
         </Tabs>
+
       </main>
 
 
