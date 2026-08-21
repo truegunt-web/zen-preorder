@@ -25,7 +25,6 @@ export const Route = createFileRoute("/auth")({
 
 function AuthPage() {
   const navigate = useNavigate();
-  const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -40,10 +39,9 @@ function AuthPage() {
     e.preventDefault();
     setLoading(true);
     try {
-      const fn = mode === "signin" ? supabase.auth.signInWithPassword : supabase.auth.signUp;
-      const { error } = await fn.call(supabase.auth, { email, password });
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) throw error;
-      toast.success(mode === "signin" ? "Вход выполнен" : "Аккаунт создан");
+      toast.success("Вход выполнен");
       navigate({ to: "/admin" });
     } catch (err) {
       toast.error((err as Error).message);
@@ -61,43 +59,39 @@ function AuthPage() {
           </div>
           <span className="font-bold">Rybman</span>
         </Link>
-        <h1 className="text-2xl font-bold">
-          {mode === "signin" ? "Вход в админку" : "Регистрация администратора"}
-        </h1>
+        <h1 className="text-2xl font-bold">Вход в админку</h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          {mode === "signin"
-            ? "Введите e-mail и пароль администратора каталога."
-            : "Первый созданный аккаунт получит права администратора."}
+          Вход доступен только сотрудникам с назначенной ролью.
         </p>
 
         <form onSubmit={submit} className="mt-6 space-y-4">
           <div className="space-y-2">
             <Label htmlFor="email">E-mail</Label>
-            <Input id="email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
+            <Input
+              id="email"
+              type="email"
+              autoComplete="username"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
           </div>
           <div className="space-y-2">
             <Label htmlFor="password">Пароль</Label>
             <Input
               id="password"
               type="password"
+              autoComplete="current-password"
               required
-              minLength={6}
+              minLength={8}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
           <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? "Подождите…" : mode === "signin" ? "Войти" : "Создать аккаунт"}
+            {loading ? "Подождите…" : "Войти"}
           </Button>
         </form>
-
-        <button
-          type="button"
-          onClick={() => setMode(mode === "signin" ? "signup" : "signin")}
-          className="mt-4 w-full text-center text-sm text-muted-foreground hover:text-foreground"
-        >
-          {mode === "signin" ? "Нет аккаунта? Зарегистрироваться" : "Уже есть аккаунт? Войти"}
-        </button>
       </Card>
     </div>
   );

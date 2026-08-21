@@ -1,5 +1,5 @@
-
-UPDATE auth.users
-SET encrypted_password = crypt('01234567', gen_salt('bf')),
-    updated_at = now()
-WHERE email = 'truegunt@admin.local';
+-- Intentionally left blank.
+--
+-- This migration previously reset a hard-coded administrator password.
+-- Password rotation must happen through the authentication provider and must
+-- never be stored in repository history.
