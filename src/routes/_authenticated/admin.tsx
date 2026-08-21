@@ -264,7 +264,12 @@ function AdminPage() {
           <TabsContent value="windows">
             <PreorderWindowsEditor />
           </TabsContent>
+
+          <TabsContent value="account">
+            <AccountSettings />
+          </TabsContent>
         </Tabs>
+
       </main>
 
 
