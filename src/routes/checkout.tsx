@@ -67,12 +67,14 @@ function CheckoutPage() {
     },
   });
 
-  const deliveryDays = useMemo(() => (windowQ.data?.delivery_days ?? ["thursday", "friday", "saturday"]) as string[], [
-    windowQ.data,
-  ]);
+  const deliveryDays = useMemo(() => (windowQ.data?.delivery_days ?? []) as string[], [windowQ.data]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!windowQ.data) {
+      toast.error("Приём заявок закрыт");
+      return;
+    }
     if (items.length === 0) {
       toast.error("Корзина пуста");
       return;
@@ -128,7 +130,21 @@ function CheckoutPage() {
         </Link>
         <h1 className="mb-6 text-3xl font-bold">Оформление заявки</h1>
 
-        {windowQ.isLoading ? (\n          <Card className="p-12 text-center">\n            <p className="text-muted-foreground">Проверяем окно предзаказа…</p>\n          </Card>\n        ) : !windowQ.data ? (\n          <Card className="p-12 text-center">\n            <h2 className="text-xl font-semibold">Приём заявок закрыт</h2>\n            <p className="mt-2 text-muted-foreground">\n              Оформление станет доступно после открытия следующего окна предзаказа.\n            </p>\n            <Button asChild className="mt-4">\n              <Link to="/">Вернуться в каталог</Link>\n            </Button>\n          </Card>\n        ) : items.length === 0 ? (
+        {windowQ.isLoading ? (
+          <Card className="p-12 text-center">
+            <p className="text-muted-foreground">Проверяем окно предзаказа…</p>
+          </Card>
+        ) : !windowQ.data ? (
+          <Card className="p-12 text-center">
+            <h2 className="text-xl font-semibold">Приём заявок закрыт</h2>
+            <p className="mt-2 text-muted-foreground">
+              Оформление станет доступно после открытия следующего окна предзаказа.
+            </p>
+            <Button asChild className="mt-4">
+              <Link to="/">Вернуться в каталог</Link>
+            </Button>
+          </Card>
+        ) : items.length === 0 ? (
           <Card className="p-12 text-center">
             <p className="text-muted-foreground">Корзина пуста.</p>
             <Button asChild className="mt-4">
