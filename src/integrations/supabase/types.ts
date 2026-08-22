@@ -65,6 +65,27 @@ export type Database = {
           },
         ]
       }
+      order_rate_limits: {
+        Row: {
+          expires_at: string
+          key_hash: string
+          request_count: number
+          window_started_at: string
+        }
+        Insert: {
+          expires_at: string
+          key_hash: string
+          request_count?: number
+          window_started_at?: string
+        }
+        Update: {
+          expires_at?: string
+          key_hash?: string
+          request_count?: number
+          window_started_at?: string
+        }
+        Relationships: []
+      }
       orders: {
         Row: {
           address: string
@@ -286,11 +307,7 @@ export type Database = {
     }
     Functions: {
       consume_order_rate_limit: {
-        Args: {
-          p_key_hash: string
-          p_limit: number
-          p_window_seconds: number
-        }
+        Args: { p_key_hash: string; p_limit: number; p_window_seconds: number }
         Returns: boolean
       }
       has_role: {
