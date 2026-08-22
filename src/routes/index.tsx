@@ -249,7 +249,12 @@ function HomePage() {
         ) : (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {filtered.map((p) => (
-              <ProductCard\n                key={p.id}\n                product={p}\n                onOpen={() => setSelected(p)}\n                orderingEnabled={!!windowQ.data}\n              />
+              <ProductCard
+                key={p.id}
+                product={p}
+                onOpen={() => setSelected(p)}
+                orderingEnabled={!!windowQ.data}
+              />
             ))}
           </div>
         )}
@@ -278,7 +283,12 @@ function HomePage() {
         )}
       </main>
 
-      <ProductModal\n        product={selected}\n        open={!!selected}\n        onClose={() => setSelected(null)}\n        orderingEnabled={!!windowQ.data}\n      />
+      <ProductModal
+        product={selected}
+        open={!!selected}
+        onClose={() => setSelected(null)}
+        orderingEnabled={!!windowQ.data}
+      />
 
       <footer className="mt-16 border-t bg-muted/30 py-8">
         <div className="container mx-auto flex flex-col items-center gap-4 px-4 text-center text-sm text-muted-foreground whitespace-pre-line">
