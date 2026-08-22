@@ -17,10 +17,23 @@ type Product = {
   image_url: string | null;
 };
 
-export function ProductCard({\n  product,\n  onOpen,\n  orderingEnabled,\n}: {\n  product: Product;\n  onOpen: () => void;\n  orderingEnabled: boolean;\n}) {
+export function ProductCard({
+  product,
+  onOpen,
+  orderingEnabled,
+}: {
+  product: Product;
+  onOpen: () => void;
+  orderingEnabled: boolean;
+}) {
   const { addItem } = useCart();
 
   const handleAdd = () => {
+    if (!orderingEnabled) {
+      toast.error("Приём заявок сейчас закрыт");
+      return;
+    }
+
     const item: Omit<CartItem, "quantity" | "comment"> = {
       productId: product.id,
       name: product.name,
@@ -78,7 +91,13 @@ export function ProductCard({\n  product,\n  onOpen,\n  orderingEnabled,\n}: {\n
             <Button size="icon" variant="outline" onClick={onOpen} aria-label="Подробнее">
               <Info className="h-4 w-4" />
             </Button>
-            <Button\n              size="icon"\n              onClick={handleAdd}\n              aria-label={orderingEnabled ? "В корзину" : "Приём заявок закрыт"}\n              disabled={!orderingEnabled}\n              className="bg-accent text-accent-foreground hover:bg-accent/90"\n            >
+            <Button
+              size="icon"
+              onClick={handleAdd}
+              aria-label={orderingEnabled ? "В корзину" : "Приём заявок закрыт"}
+              disabled={!orderingEnabled}
+              className="bg-accent text-accent-foreground hover:bg-accent/90"
+            >
               <Plus className="h-4 w-4" />
             </Button>
           </div>
