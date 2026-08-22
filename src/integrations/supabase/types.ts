@@ -285,14 +285,6 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      consume_order_rate_limit: {
-        Args: {
-          p_key_hash: string
-          p_limit: number
-          p_window_seconds: number
-        }
-        Returns: boolean
-      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
