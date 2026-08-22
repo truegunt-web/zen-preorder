@@ -14,7 +14,7 @@ export function CartSheet() {
   const { items, updateQuantity, updateComment, removeItem, total, count } = useCart();
   const [open, setOpen] = useState(false);
   const windowQ = useQuery({
-    queryKey: ["active-window"],
+    queryKey: ["active-window-id"],
     queryFn: async () => {
       const now = new Date().toISOString();
       const { data, error } = await supabase
