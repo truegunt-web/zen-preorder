@@ -4,6 +4,9 @@ import { z } from "zod";
 
 const DELIVERY_FEE = 400;
 const QUANTITY_EPSILON = 1e-6;
+const MIN_FORM_FILL_MS = 3_000;
+const MAX_FORM_AGE_MS = 2 * 60 * 60 * 1_000;
+const RATE_LIMIT_MESSAGE = "Не удалось отправить заявку. Попробуйте позже.";
 
 const payloadSchema = z
   .object({
@@ -14,6 +17,8 @@ const payloadSchema = z
     deliveryDay: z.enum(["thursday", "friday", "saturday"]),
     shippingMethod: z.enum(["delivery", "pickup"]),
     windowId: z.string().uuid(),
+    website: z.string().max(200).optional().or(z.literal("")),
+    formStartedAt: z.number().int().positive(),
     items: z
       .array(
         z.object({
@@ -53,12 +58,63 @@ function quantityMatchesRules(quantity: number, minOrder: number, step: number) 
   return Math.abs(steps - Math.round(steps)) <= QUANTITY_EPSILON;
 }
 
+function getClientIp(request: Request | undefined) {
+  if (!request) return null;
+
+  const netlifyIp = request.headers.get("x-nf-client-connection-ip")?.trim();
+  if (netlifyIp) return netlifyIp;
+
+  const forwarded = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim();
+  if (forwarded) return forwarded;
+
+  return request.headers.get("x-real-ip")?.trim() || null;
+}
+
+async function hmacIdentifier(namespace: string, value: string) {
+  const secret = process.env.ORDER_RATE_LIMIT_SECRET || process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!secret) throw new Error("Rate-limit secret is not configured");
+
+  const encoder = new TextEncoder();
+  const key = await crypto.subtle.importKey(
+    "raw",
+    encoder.encode(secret),
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign"],
+  );
+  const signature = await crypto.subtle.sign("HMAC", key, encoder.encode(`${namespace}:${value}`));
+  return Array.from(new Uint8Array(signature), (byte) => byte.toString(16).padStart(2, "0")).join("");
+}
+
+async function consumeRateLimit(
+  supabaseAdmin: Awaited<typeof import("@/integrations/supabase/client.server")>["supabaseAdmin"],
+  keyHash: string,
+  limit: number,
+  windowSeconds: number,
+) {
+  const { data, error } = await supabaseAdmin.rpc("consume_order_rate_limit", {
+    p_key_hash: keyHash,
+    p_limit: limit,
+    p_window_seconds: windowSeconds,
+  });
+
+  if (error) throw new Error("Rate-limit check failed");
+  return data;
+}
+
 export const createOrder = createServerFn({ method: "POST" })
   .validator((data: unknown) => payloadSchema.parse(data))
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const now = new Date().toISOString();
+    const request = getRequest();
+    const nowMs = Date.now();
+    const formAge = nowMs - data.formStartedAt;
 
+    if (data.website || formAge < MIN_FORM_FILL_MS || formAge > MAX_FORM_AGE_MS) {
+      throw new Error(RATE_LIMIT_MESSAGE);
+    }
+
+    const now = new Date(nowMs).toISOString();
     const { data: preorderWindow, error: windowError } = await supabaseAdmin
       .from("preorder_windows")
       .select("id, delivery_days")
@@ -74,10 +130,22 @@ export const createOrder = createServerFn({ method: "POST" })
       throw new Error("Выбранный день доставки недоступен");
     }
 
+    const normalizedPhone = data.phone.replace(/\D/g, "");
+    const phoneKey = await hmacIdentifier("phone", normalizedPhone);
+    const phoneAllowed = await consumeRateLimit(supabaseAdmin, phoneKey, 3, 30 * 60);
+    if (!phoneAllowed) throw new Error(RATE_LIMIT_MESSAGE);
+
+    const clientIp = getClientIp(request);
+    if (clientIp) {
+      const ipKey = await hmacIdentifier("ip", clientIp);
+      const ipAllowed = await consumeRateLimit(supabaseAdmin, ipKey, 8, 15 * 60);
+      if (!ipAllowed) throw new Error(RATE_LIMIT_MESSAGE);
+    }
+
     // Optional auth: attach the order to a signed-in user when a valid bearer token is present.
     let userId: string | null = null;
     try {
-      const token = getRequest()?.headers.get("authorization")?.replace(/^Bearer /, "");
+      const token = request?.headers.get("authorization")?.replace(/^Bearer /, "");
       if (token && token.split(".").length === 3) {
         const { data: claims } = await supabaseAdmin.auth.getClaims(token);
         userId = (claims?.claims?.sub as string | undefined) ?? null;

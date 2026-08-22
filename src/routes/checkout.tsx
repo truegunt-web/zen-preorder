@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { createOrder } from "@/lib/orders.functions";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
@@ -46,10 +46,16 @@ function CheckoutPage() {
   const navigate = useNavigate();
   const submitOrder = useServerFn(createOrder);
   const [submitting, setSubmitting] = useState(false);
+  const [formStartedAt, setFormStartedAt] = useState<number | null>(null);
+  const [website, setWebsite] = useState("");
   const [form, setForm] = useState({ name: "", phone: "", address: "", comment: "", deliveryDay: "", shippingMethod: "delivery" });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const deliveryFee = form.shippingMethod === "delivery" ? DELIVERY_FEE : 0;
   const total = itemsTotal + deliveryFee;
+
+  useEffect(() => {
+    setFormStartedAt(Date.now());
+  }, []);
 
   const windowQ = useQuery({
     queryKey: ["active-window"],
@@ -73,6 +79,10 @@ function CheckoutPage() {
     e.preventDefault();
     if (!windowQ.data) {
       toast.error("Приём заявок закрыт");
+      return;
+    }
+    if (!formStartedAt) {
+      toast.error("Форма ещё загружается");
       return;
     }
     if (items.length === 0) {
@@ -102,6 +112,8 @@ function CheckoutPage() {
           deliveryDay: parsed.data.deliveryDay,
           shippingMethod: parsed.data.shippingMethod,
           windowId: windowQ.data.id,
+          website,
+          formStartedAt,
           items: items.map((it) => ({
             productId: it.productId,
             quantity: it.quantity,
@@ -153,6 +165,18 @@ function CheckoutPage() {
           </Card>
         ) : (
           <form onSubmit={handleSubmit} className="grid gap-6 lg:grid-cols-[1fr_380px]">
+            <div className="absolute -left-[10000px] top-auto h-px w-px overflow-hidden" aria-hidden="true">
+              <Label htmlFor="website">Сайт</Label>
+              <Input
+                id="website"
+                name="website"
+                type="text"
+                tabIndex={-1}
+                autoComplete="off"
+                value={website}
+                onChange={(event) => setWebsite(event.target.value)}
+              />
+            </div>
             <div className="space-y-6">
               <Card className="p-6">
                 <h2 className="mb-4 text-lg font-semibold">Контакты</h2>
@@ -274,7 +298,7 @@ function CheckoutPage() {
                 <Button
                   type="submit"
                   size="lg"
-                  disabled={submitting || !windowQ.data}
+                  disabled={submitting || !windowQ.data || !formStartedAt}
                   className="mt-4 w-full bg-accent text-accent-foreground hover:bg-accent/90"
                 >
                   {submitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
