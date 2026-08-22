@@ -118,7 +118,7 @@ export function ProductModal({
               </div>
             </div>
 
-            <Button size="lg" onClick={handleAdd} className="mt-auto bg-accent text-accent-foreground hover:bg-accent/90">
+            <Button\n              size="lg"\n              onClick={handleAdd}\n              disabled={!orderingEnabled}\n              className="mt-auto bg-accent text-accent-foreground hover:bg-accent/90"\n            >
               <Plus className="mr-2 h-5 w-5" />
               В корзину
             </Button>
