@@ -7,10 +7,30 @@ import { UNIT_LABEL, formatPrice, useCart } from "@/lib/cart";
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Separator } from "@/components/ui/separator";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 
 export function CartSheet() {
   const { items, updateQuantity, updateComment, removeItem, total, count } = useCart();
   const [open, setOpen] = useState(false);
+  const windowQ = useQuery({
+    queryKey: ["active-window"],
+    queryFn: async () => {
+      const now = new Date().toISOString();
+      const { data, error } = await supabase
+        .from("preorder_windows")
+        .select("id")
+        .eq("is_active", true)
+        .lte("opens_at", now)
+        .gte("closes_at", now)
+        .order("closes_at", { ascending: true })
+        .limit(1)
+        .maybeSingle();
+      if (error) throw error;
+      return data;
+    },
+  });
+  const orderingEnabled = !!windowQ.data;
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -121,14 +141,20 @@ export function CartSheet() {
                 <span className="text-muted-foreground">Итого:</span>
                 <span className="font-bold">{formatPrice(total)}</span>
               </div>
-              <Button
-                asChild
-                size="lg"
-                className="w-full bg-accent text-accent-foreground hover:bg-accent/90"
-                onClick={() => setOpen(false)}
-              >
-                <Link to="/checkout">Оформить заявку</Link>
-              </Button>
+              {orderingEnabled ? (
+                <Button
+                  asChild
+                  size="lg"
+                  className="w-full bg-accent text-accent-foreground hover:bg-accent/90"
+                  onClick={() => setOpen(false)}
+                >
+                  <Link to="/checkout">Оформить заявку</Link>
+                </Button>
+              ) : (
+                <Button size="lg" className="w-full" disabled>
+                  Приём заявок закрыт
+                </Button>
+              )}
             </SheetFooter>
           </>
         )}

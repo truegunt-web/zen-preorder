@@ -23,15 +23,22 @@ export function ProductModal({
   product,
   open,
   onClose,
+  orderingEnabled,
 }: {
   product: Product | null;
   open: boolean;
   onClose: () => void;
+  orderingEnabled: boolean;
 }) {
   const { addItem } = useCart();
   if (!product) return null;
 
   const handleAdd = () => {
+    if (!orderingEnabled) {
+      toast.error("Приём заявок сейчас закрыт");
+      return;
+    }
+
     addItem({
       productId: product.id,
       name: product.name,
@@ -118,9 +125,14 @@ export function ProductModal({
               </div>
             </div>
 
-            <Button size="lg" onClick={handleAdd} className="mt-auto bg-accent text-accent-foreground hover:bg-accent/90">
+            <Button
+              size="lg"
+              onClick={handleAdd}
+              disabled={!orderingEnabled}
+              className="mt-auto bg-accent text-accent-foreground hover:bg-accent/90"
+            >
               <Plus className="mr-2 h-5 w-5" />
-              В корзину
+              {orderingEnabled ? "В корзину" : "Приём заявок закрыт"}
             </Button>
           </div>
         </div>

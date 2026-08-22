@@ -67,12 +67,14 @@ function CheckoutPage() {
     },
   });
 
-  const deliveryDays = useMemo(() => (windowQ.data?.delivery_days ?? ["thursday", "friday", "saturday"]) as string[], [
-    windowQ.data,
-  ]);
+  const deliveryDays = useMemo(() => (windowQ.data?.delivery_days ?? []) as string[], [windowQ.data]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!windowQ.data) {
+      toast.error("Приём заявок закрыт");
+      return;
+    }
     if (items.length === 0) {
       toast.error("Корзина пуста");
       return;
@@ -99,7 +101,7 @@ function CheckoutPage() {
           comment: parsed.data.comment ?? "",
           deliveryDay: parsed.data.deliveryDay,
           shippingMethod: parsed.data.shippingMethod,
-          windowId: windowQ.data?.id ?? null,
+          windowId: windowQ.data.id,
           items: items.map((it) => ({
             productId: it.productId,
             quantity: it.quantity,
@@ -128,7 +130,21 @@ function CheckoutPage() {
         </Link>
         <h1 className="mb-6 text-3xl font-bold">Оформление заявки</h1>
 
-        {items.length === 0 ? (
+        {windowQ.isLoading ? (
+          <Card className="p-12 text-center">
+            <p className="text-muted-foreground">Проверяем окно предзаказа…</p>
+          </Card>
+        ) : !windowQ.data ? (
+          <Card className="p-12 text-center">
+            <h2 className="text-xl font-semibold">Приём заявок закрыт</h2>
+            <p className="mt-2 text-muted-foreground">
+              Оформление станет доступно после открытия следующего окна предзаказа.
+            </p>
+            <Button asChild className="mt-4">
+              <Link to="/">Вернуться в каталог</Link>
+            </Button>
+          </Card>
+        ) : items.length === 0 ? (
           <Card className="p-12 text-center">
             <p className="text-muted-foreground">Корзина пуста.</p>
             <Button asChild className="mt-4">
@@ -258,7 +274,7 @@ function CheckoutPage() {
                 <Button
                   type="submit"
                   size="lg"
-                  disabled={submitting}
+                  disabled={submitting || !windowQ.data}
                   className="mt-4 w-full bg-accent text-accent-foreground hover:bg-accent/90"
                 >
                   {submitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
