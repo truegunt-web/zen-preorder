@@ -6,11 +6,31 @@ import { Fish, Minus, Plus, ShoppingCart, Trash2 } from "lucide-react";
 import { UNIT_LABEL, formatPrice, useCart } from "@/lib/cart";
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { Separator } from "@/components/ui/separator";\nimport { useQuery } from "@tanstack/react-query";\nimport { supabase } from "@/integrations/supabase/client";
+import { Separator } from "@/components/ui/separator";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 
 export function CartSheet() {
   const { items, updateQuantity, updateComment, removeItem, total, count } = useCart();
-  const [open, setOpen] = useState(false);\n  const windowQ = useQuery({\n    queryKey: ["active-window"],\n    queryFn: async () => {\n      const now = new Date().toISOString();\n      const { data, error } = await supabase\n        .from("preorder_windows")\n        .select("id")\n        .eq("is_active", true)\n        .lte("opens_at", now)\n        .gte("closes_at", now)\n        .order("closes_at", { ascending: true })\n        .limit(1)\n        .maybeSingle();\n      if (error) throw error;\n      return data;\n    },\n  });\n  const orderingEnabled = !!windowQ.data;
+  const [open, setOpen] = useState(false);
+  const windowQ = useQuery({
+    queryKey: ["active-window"],
+    queryFn: async () => {
+      const now = new Date().toISOString();
+      const { data, error } = await supabase
+        .from("preorder_windows")
+        .select("id")
+        .eq("is_active", true)
+        .lte("opens_at", now)
+        .gte("closes_at", now)
+        .order("closes_at", { ascending: true })
+        .limit(1)
+        .maybeSingle();
+      if (error) throw error;
+      return data;
+    },
+  });
+  const orderingEnabled = !!windowQ.data;
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
