@@ -99,7 +99,7 @@ function CheckoutPage() {
           comment: parsed.data.comment ?? "",
           deliveryDay: parsed.data.deliveryDay,
           shippingMethod: parsed.data.shippingMethod,
-          windowId: windowQ.data?.id ?? null,
+          windowId: windowQ.data.id,
           items: items.map((it) => ({
             productId: it.productId,
             quantity: it.quantity,
@@ -128,7 +128,7 @@ function CheckoutPage() {
         </Link>
         <h1 className="mb-6 text-3xl font-bold">Оформление заявки</h1>
 
-        {items.length === 0 ? (
+        {windowQ.isLoading ? (\n          <Card className="p-12 text-center">\n            <p className="text-muted-foreground">Проверяем окно предзаказа…</p>\n          </Card>\n        ) : !windowQ.data ? (\n          <Card className="p-12 text-center">\n            <h2 className="text-xl font-semibold">Приём заявок закрыт</h2>\n            <p className="mt-2 text-muted-foreground">\n              Оформление станет доступно после открытия следующего окна предзаказа.\n            </p>\n            <Button asChild className="mt-4">\n              <Link to="/">Вернуться в каталог</Link>\n            </Button>\n          </Card>\n        ) : items.length === 0 ? (
           <Card className="p-12 text-center">
             <p className="text-muted-foreground">Корзина пуста.</p>
             <Button asChild className="mt-4">
@@ -258,7 +258,7 @@ function CheckoutPage() {
                 <Button
                   type="submit"
                   size="lg"
-                  disabled={submitting}
+                  disabled={submitting || !windowQ.data}
                   className="mt-4 w-full bg-accent text-accent-foreground hover:bg-accent/90"
                 >
                   {submitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
